@@ -6,7 +6,7 @@ title: Setup
 
 Simply click on the button below and then click on ``Create codespace``. The only requirement is a GitHub account.
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/hsf-training/hsf-training-databases-basics){:target="_blank"}
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/hsf-training/hsf-training-databases-basics)
 
 You should have a new tab with VSCode running and everything pre-installed. The passwords for MYSQL and Opensearch will be ``HSFtraining1``.
 
@@ -44,15 +44,15 @@ docker run -d --name=myfirst-sqlserver -p 3306:3306 --env="MYSQL_ROOT_PASSWORD=m
 Here we named the container as ``myfirst-sqlserver``. It is running on host ``localhost`` and port ``3306``.
 A user with name ``root`` already exists with the password that you set in the environment variable ``MYSQL_ROOT_PASSWORD``.
 
-> ## Port conflict issues
-> If you run into a port conflict issue (because the port is already in use, for example), then you can map the port
-> number to a different one. Something like port ``XXXX`` in ``-p XXXX:3306`` in the above Docker command.
-{: .callout}
+:::{note} Port conflict issues
+If you run into a port conflict issue (because the port is already in use, for example), then you can map the port
+number to a different one. Something like port ``XXXX`` in ``-p XXXX:3306`` in the above Docker command.
+:::
 
-> ## Never use weak passwords in production!
-> Probably obvious, but this is a friendly reminder. Use [strong passwords](https://security.harvard.edu/use-strong-passwords)
-> when you are working with real data in databases that are accessible from outside your computer.
-{: .callout}
+:::{note} Never use weak passwords in production!
+Probably obvious, but this is a friendly reminder. Use [strong passwords](https://security.harvard.edu/use-strong-passwords)
+when you are working with real data in databases that are accessible from outside your computer.
+:::
 
 
 To test that if everything is up and running, execute the following command:
@@ -63,18 +63,18 @@ you should see the mysql prompt as ``mysql>``. If yes, then everything is workin
 
 You can type ``exit;`` in the mysql command prompt to exit.
 
-> ## Stopping and starting the MySQL server
-> If you want to stop the Docker container that hosts MySQL server to continue working later, execute the following command:
-> ```bash
-> docker stop myfirst-sqlserver
-> ```
-> And the container will be stopped. To start the container again, execute the following command:
-> ```bash
-> docker start myfirst-sqlserver
-> ```
->
-> You can learn more about Docker commands at the [HSF Introduction to Docker and Podman](https://hsf-training.github.io/hsf-training-docker).
-{: .callout}
+:::{note} Stopping and starting the MySQL server
+If you want to stop the Docker container that hosts MySQL server to continue working later, execute the following command:
+```bash
+docker stop myfirst-sqlserver
+```
+And the container will be stopped. To start the container again, execute the following command:
+```bash
+docker start myfirst-sqlserver
+```
+
+You can learn more about Docker commands at the [HSF Introduction to Docker and Podman](https://hsf-training.github.io/hsf-training-docker).
+:::
 
 ## Option 2: Setup a MySQL server via Apptainer
 
@@ -145,19 +145,17 @@ docker run -d -p 9200:9200 -p 9600:9600 -e "discovery.type=single-node" -e "OPEN
 
 Replace: `<custom-admin-password>` to a secure password of your choice.
 
-> ## Choosing a safe password
-> If you run with `-it` instead of `-d` and the password is not secure you will see the following message and the container will exit immediately.
->
-> ```
-> Password <your-admin-password> failed validation:
->
-> < reason for failure >
->
-> Please re-try with a minimum 8 character password and must contain at least one uppercase letter, one lowercase letter, one digit, and one special character that is strong. Password strength can be tested here: https://lowe.github.io/tryzxcvbn
-> ```
-> {: .output}
->
-{: .callout}
+:::{note} Choosing a safe password
+If you run with `-it` instead of `-d` and the password is not secure you will see the following message and the container will exit immediately.
+
+```text
+Password <your-admin-password> failed validation:
+
+< reason for failure >
+
+Please re-try with a minimum 8 character password and must contain at least one uppercase letter, one lowercase letter, one digit, and one special character that is strong. Password strength can be tested here: https://lowe.github.io/tryzxcvbn
+```
+:::
 
 To test that if everything is up and running, execute the following command:
 ```bash

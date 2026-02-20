@@ -2,15 +2,16 @@
 title: "Relations between Tables"
 teaching: 60
 exercises: 30
-questions:
-- "How to perform SQL Join?"
-- "How to make use of different SQL joins?"
-objectives:
-- "To retrieve data from multiple tables Simultaneously when data is related."
-keypoints:
-- "JOIN operations are used to combine rows from two or more tables based on a common column."
-- "Foreign keys are used to maintain data integrity and enforce references."
 ---
+
+:::{admonition} Questions
+- How to perform SQL Join?
+- How to make use of different SQL joins?
+:::
+
+:::{admonition} Objectives
+- To retrieve data from multiple tables Simultaneously when data is related.
+:::
 
 Let's explore how to retrieve data from multiple tables simultaneously when the data is related.
 
@@ -50,7 +51,7 @@ Remember that you can check the data in the table using:
 ```sql
 SELECT * FROM experiments;
 ```
-~~~
+```text
 +----+-----------------+------------+----------------+------------+
 | id | experiment_name | laboratory | collision_type | start_year |
 +----+-----------------+------------+----------------+------------+
@@ -61,8 +62,7 @@ SELECT * FROM experiments;
 |  5 | Belle2          | KEK        | e+e-           |       2018 |
 |  6 | BaBar           | SLAC       | e+e-           |       1999 |
 +----+-----------------+------------+----------------+------------+
-~~~
-{: .output}
+```
 
 Let's create another table `files` with the schema below
 ```sql
@@ -99,7 +99,7 @@ Confirm the data in the `files` table:
 ```sql
 SELECT * FROM files;
 ```
-~~~
+```text
 +----+--------------------+---------------+------------+--------------+-----------+
 | id | filename           | experiment_id | run_number | total_events | data_type |
 +----+--------------------+---------------+------------+--------------+-----------+
@@ -110,8 +110,7 @@ SELECT * FROM files;
 |  5 | belle2.myfile.root |             5 |        505 |         3141 | data      |
 |  7 | alice.myfile2.root |             4 |        404 |         1124 | mc        |
 +----+--------------------+---------------+------------+--------------+-----------+
-~~~
-{: .output}
+```
 
 
 ## SQL JOIN
@@ -133,7 +132,7 @@ FROM files f
 INNER JOIN experiments e
 ON f.experiment_id = e.id;
 ```
-~~~
+```text
 +--------------------+-----------------+
 | filename           | experiment_name |
 +--------------------+-----------------+
@@ -144,8 +143,7 @@ ON f.experiment_id = e.id;
 | belle2.myfile.root | Belle2          |
 | alice.myfile2.root | ALICE           |
 +--------------------+-----------------+
-~~~
-{: .output}
+```
 
 One more example:
 ```sql
@@ -170,7 +168,7 @@ FROM files f
 LEFT JOIN experiments e
 ON f.experiment_id = e.id;
 ```
-~~~
+```text
 +--------------------+-----------------+----------------+
 | filename           | experiment_name | collision_type |
 +--------------------+-----------------+----------------+
@@ -182,8 +180,7 @@ ON f.experiment_id = e.id;
 | alice.myfile2.root | ALICE           | PbPb           |
 | alps.myfile.root   | NULL            | NULL           |
 +--------------------+-----------------+----------------+
-~~~
-{: .output}
+```
 
 Notice that:
   - Returns all rows from the left table (`files`), including unmatched rows.
@@ -202,7 +199,7 @@ FROM files f
 RIGHT JOIN experiments e
 ON f.experiment_id = e.id;
 ```
-~~~
+```text
 +-----------------+--------------------+
 | experiment_name | filename           |
 +-----------------+--------------------+
@@ -214,8 +211,7 @@ ON f.experiment_id = e.id;
 | CMS             | cms.myfile.root    |
 | LHCb            | lhcb.myfile.root   |
 +-----------------+--------------------+
-~~~
-{: .output}
+```
 
 You can notice:
   - Returns all rows from the right table (`experiments`), including unmatched rows.
@@ -238,7 +234,7 @@ FROM experiments e
 LEFT JOIN files f
 ON f.experiment_id = e.id;
 ```
-~~~
+```text
 +--------------------+-----------------+----------------+
 | filename           | experiment_name | collision_type |
 +--------------------+-----------------+----------------+
@@ -251,8 +247,7 @@ ON f.experiment_id = e.id;
 | alps.myfile.root   | NULL            | NULL           |
 | NULL               | BaBar           | e+e-           |
 +--------------------+-----------------+----------------+
-~~~
-{: .output}
+```
 
 Note: The used `SELECT` statements have the same columns to use `UNION` (try with different columns and see what happens).
 
@@ -273,36 +268,41 @@ ADD CONSTRAINT fk_experiment_id
 FOREIGN KEY (experiment_id)
 REFERENCES experiments(id);
 ```
-~~~
+```text
 ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`all_experiments_data`.`#sql-1_9`, CONSTRAINT `fk_experiment_id` FOREIGN KEY (`experiment_id`) REFERENCES `experiments` (`id`))
-~~~
-{: .output}
+```
 
-> ## Why it didn't work?
->
-> What prevents to create a foreign key? How to fix the error message above?
->
-> > ## Solution
-> >
-> > The error message indicates that there is a constraint violation. This is because we have a row in the `files` table with an `experiment_id` that does not exist in the `experiments` table.
-> > In this case, we have a row with `experiment_id = 9` in the `files` table, but there is no corresponding `id` in the `experiments` table.
-> >
-> > Let's add the information of the experiment ALPS
-> >
-> > ```sql
-> > INSERT INTO experiments (experiment_name, laboratory, collision_type, start_year)
-> > VALUES
-> > ("ALPS II", "DESY", "N/A", 2011);
-> > ```
-> >
-> > And set the proper `experiment_id` (in this case is id = 7, confirm with `SELECT * FROM experiments`).
-> > ```sql
-> > UPDATE files
-> > SET experiment_id = 7
-> > WHERE filename = "alps.myfile.root";
-> > ```
-> >
-> > Now, try again to create the foreign key as before.
-> >
-> {: .solution}
-{: .challenge}
+:::::{admonition} Why it didn't work?
+:class: challenge
+
+What prevents to create a foreign key? How to fix the error message above?
+
+::::{admonition} Solution
+:class: dropdown
+
+The error message indicates that there is a constraint violation. This is because we have a row in the `files` table with an `experiment_id` that does not exist in the `experiments` table.
+In this case, we have a row with `experiment_id = 9` in the `files` table, but there is no corresponding `id` in the `experiments` table.
+
+Let's add the information of the experiment ALPS
+
+```sql
+INSERT INTO experiments (experiment_name, laboratory, collision_type, start_year)
+VALUES
+("ALPS II", "DESY", "N/A", 2011);
+```
+
+And set the proper `experiment_id` (in this case is id = 7, confirm with `SELECT * FROM experiments`).
+```sql
+UPDATE files
+SET experiment_id = 7
+WHERE filename = "alps.myfile.root";
+```
+
+Now, try again to create the foreign key as before.
+::::
+:::::
+
+:::{admonition} Key Points
+- JOIN operations are used to combine rows from two or more tables based on a common column.
+- Foreign keys are used to maintain data integrity and enforce references.
+:::

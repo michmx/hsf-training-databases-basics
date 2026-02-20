@@ -2,17 +2,17 @@
 title: "Introduction"
 teaching: 60
 exercises: 30
-questions:
-- "What is a database management system and why it is a good idea to use one?"
-- "What are the differences between relational and non-relational databases?"
-objectives:
-- "Understand the concepts of a database management system"
-- "Learn about common database management systems used in HEP and Nuclear Physics"
-keypoints:
-- "A database management system (DBMS) is specialized on managing databases in a scalable and reliable way."
-- "A relational database organizes data into tables with rows and columns."
-- "A non-relational database does not use the tabular schema of columns found in relational databases, having a more flexible schema."
 ---
+
+:::{admonition} Questions
+- What is a database management system and why it is a good idea to use one?
+- What are the differences between relational and non-relational databases?
+:::
+
+:::{admonition} Objectives
+- Understand the concepts of a database management system
+- Learn about common database management systems used in HEP and Nuclear Physics
+:::
 
 # What is a database?
 
@@ -42,10 +42,10 @@ the sizes of the files that match the date you are interested in. Things get muc
 the information can get very easily corrupted. And what if multiple people need to constantly entry information? What a nightmare
 to keep everything in sync!
 
-> ## Data organization
-> When developing software, how do we organize data is a critical decision that has an effect on the performance
-> and scalability of the application.
-{: .callout}
+:::{note} Data organization
+When developing software, how do we organize data is a critical decision that has an effect on the performance
+and scalability of the application.
+:::
 
 In practice, databases are managed by software called database management systems (DBMS). A DBMS is a computer software
 application that interacts with the user, other applications, and the database itself to capture and analyze data.
@@ -114,10 +114,16 @@ Non-relational databases, also known as **NoSQL**, are databases that do not use
 Instead, they use a storage model optimized for the specific requirements of the type of data being stored.
 In other words, they don't have a fixed number attributes that each record must have and the schema is more flexible.
 
-> ## Relational vs NoSQL databases
-> NoSQL databases have become very popular due to the flexibility they offer. However, many-to-one and many-to-many relationships are more easily represented in a relational database.
-> Which one to choose depends on the specific requirements and must be considered carefully.
-{: .callout}
+:::{note} Relational vs NoSQL databases
+NoSQL databases have become very popular due to the flexibility they offer. However, many-to-one and many-to-many relationships are more easily represented in a relational database.
+Which one to choose depends on the specific requirements and must be considered carefully.
+:::
 
 In the last part of this training module, we will discuss more in details NoSQL databases, and we will have a quick look
 on [OpenSearch](https://opensearch.org/docs/), a distributed search engine used as a NoSQL database.
+
+:::{admonition} Key Points
+- A database management system (DBMS) is specialized on managing databases in a scalable and reliable way.
+- A relational database organizes data into tables with rows and columns.
+- A non-relational database does not use the tabular schema of columns found in relational databases, having a more flexible schema.
+:::

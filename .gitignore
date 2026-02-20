@@ -1,3 +1,4 @@
 _site
+_build
 .ruby-version
 Gemfile.lock

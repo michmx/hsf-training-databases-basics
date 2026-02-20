@@ -39,15 +39,20 @@ We'd like to ask you to familiarize yourself with our [Contribution Guide](CONTR
 the [more detailed guidelines][lesson-example] on proper formatting, ways to render the lesson locally, and even
 how to write new episodes.
 
-Quick summary of how to get a local preview: Install [jekyll][jekyll] and then run
+Quick summary of how to get a local preview: Install [Jupyter Book][jupyter-book] and then run
 
-```
-bundle install
-bundle update
-bundle exec jekyll serve
+```bash
+pip install -r requirements.txt
+jupyter-book start
 ```
 
-Unless we change framework versions, only the last command needs to be typed after the first time.
+This will build the site and start a local server (default port 3000). Open `http://localhost:3000` in your browser.
+
+To build static HTML without starting a server:
+
+```bash
+jupyter-book build --html
+```
 
 Before committing anything, we also ask you to install the [pre-commit][pre-commit] hooks of this repository:
 
@@ -108,7 +113,7 @@ Instead, all regular contributors are listed on our [HSF Training Community page
 [schools]: https://hepsoftwarefoundation.org/Schools/events.html
 [issues]: https://github.com/hsf-training/hsf-training-databases-basics/issues
 [progit]: http://git-scm.com/book/en/v2/GitHub-Contributing-to-a-Project
-[jekyll]: https://jekyllrb.com/
+[jupyter-book]: https://jupyterbook.org/
 [allcontrib-emoji-key]: https://allcontributors.org/docs/en/emoji-key
 [gfi-badge]: https://img.shields.io/badge/-good%20first%20issue-gold.svg
 [schools-badge]: https://img.shields.io/badge/upcoming%20events-browse-ff69b4

@@ -2,18 +2,18 @@
 title: "MySQL Basics"
 teaching: x
 exercises: x
-questions:
-- "What are the core SQL commands you need to know to interact with a MySQL database?"
-- "How do you create, update, and delete records in a MySQL database?"
-objectives:
-- "Understand the basic SQL commands used in MySQL."
-- "Learn how to create a database and tables in MySQL."
-- "Practice inserting, updating, and deleting records in a MySQL table."
-keypoints:
-- "SQL commands are the building blocks for interacting with a MySQL database."
-- "Creating a database and tables is the first step in structuring your data."
-- "Inserting, updating, and deleting records allows you to manage data effectively."
 ---
+
+:::{admonition} Questions
+- What are the core SQL commands you need to know to interact with a MySQL database?
+- How do you create, update, and delete records in a MySQL database?
+:::
+
+:::{admonition} Objectives
+- Understand the basic SQL commands used in MySQL.
+- Learn how to create a database and tables in MySQL.
+- Practice inserting, updating, and deleting records in a MySQL table.
+:::
 
 
 ## SQL Commands
@@ -30,25 +30,25 @@ Here are some of the core SQL commands that you'll use in MySQL:
 ## Setting up a client for sql commands
 
 In the terminal , run the following command to start the mysql client inside the Docker container:
-~~~bash
+```bash
 docker exec -it myfirst-sqlserver bash -c "mysql -uroot -pmypassword"
-~~~
+```
 Then you will see mysql command prompt as ``mysql>`` . All the sql command has to be typed in this command prompt.
 
-> # Using a MySQL client in the host
-> If you want to use a MySQL client in the host, you can install it (e.g., `mysql-client` package in Ubuntu)
-> and connect to the MySQL server running in the Docker container.
-> ```bash
-> mysql -uroot -pmypassword -P 3306 --protocol=tcp
-> ```
-> Notice that you need to specify the port number and the protocol to connect to the MySQL server running in the Docker container. See the
-> details of the Docker container hosting the MySQL server by running the command `docker ps`:
-> ```bash
->  docker ps
-> CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS                               NAMES
-> f86b66cc36bf   mysql     "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes   0.0.0.0:3306->3306/tcp, 33060/tcp   myfirst-sqlserver
->```
-{: .callout}
+:::{note} Using a MySQL client in the host
+If you want to use a MySQL client in the host, you can install it (e.g., `mysql-client` package in Ubuntu)
+and connect to the MySQL server running in the Docker container.
+```bash
+mysql -uroot -pmypassword -P 3306 --protocol=tcp
+```
+Notice that you need to specify the port number and the protocol to connect to the MySQL server running in the Docker container. See the
+details of the Docker container hosting the MySQL server by running the command `docker ps`:
+```bash
+ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS                               NAMES
+f86b66cc36bf   mysql     "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes   0.0.0.0:3306->3306/tcp, 33060/tcp   myfirst-sqlserver
+```
+:::
 
 ## Create a database.
 We will first create a database named ``metadata`` in our mysql server.
@@ -56,18 +56,18 @@ We will first create a database named ``metadata`` in our mysql server.
 CREATE DATABASE metadata;
 ```
 
-> ## Case sensitivity in MySQL
->In MySQL, SQL commands are case-insensitive. In other words, `CREATE DATABASE metadata` is the same as `create database metadata`.
->
->However, it is a common practice to write SQL commands in uppercase
->to distinguish them from table and column names, which are case-sensitive.
-{: .callout}
+:::{note} Case sensitivity in MySQL
+In MySQL, SQL commands are case-insensitive. In other words, `CREATE DATABASE metadata` is the same as `create database metadata`.
+
+However, it is a common practice to write SQL commands in uppercase
+to distinguish them from table and column names, which are case-sensitive.
+:::
 
 You can list all the databases by using the command
 ```sql
 SHOW DATABASES;
 ```
-~~~
+```text
 +--------------------+
 | Database           |
 +--------------------+
@@ -77,33 +77,30 @@ SHOW DATABASES;
 | performance_schema |
 | sys                |
 +--------------------+
-~~~
-{: .output}
+```
 
 It shows that the database "metadata" is created.
 
-> ## What are those other databases?
->
->By default, MySQL comes with several databases that serve specific purposes. We will not go into details of each database,
->but here is a brief overview:
->
-> - `mysql`: This database contains user account information and privileges
-> - `information_schema`: Contains metadata about all the other databases in the MySQL server
-> - `performance_schema`: Contains performance metrics for the MySQL server
-> - `sys`: Used for tuning and diagnosis use cases
->
-> You can read more about these databases in the [MySQL documentation](https://dev.mysql.com/doc/refman/8.0/en/information-schema.html).
-> For now it is not necessary to understand them in detail.
-{: .callout}
+:::{note} What are those other databases?
+By default, MySQL comes with several databases that serve specific purposes. We will not go into details of each database,
+but here is a brief overview:
+
+- `mysql`: This database contains user account information and privileges
+- `information_schema`: Contains metadata about all the other databases in the MySQL server
+- `performance_schema`: Contains performance metrics for the MySQL server
+- `sys`: Used for tuning and diagnosis use cases
+
+You can read more about these databases in the [MySQL documentation](https://dev.mysql.com/doc/refman/8.0/en/information-schema.html).
+For now it is not necessary to understand them in detail.
+:::
 
 To work with a specific database, you can use the USE command. For instance, to select the "metadata" database:
 ```sql
 USE metadata;
 ```
-~~~
+```text
 Database changed
-~~~
-{: .output}
+```
 
 ## Creating a table
 
@@ -151,7 +148,7 @@ You can see the table and corresponding columns by using the command
 ```sql
 DESCRIBE dataset;
 ```
-~~~
+```text
 +------------------+--------------+------+-----+---------+----------------+
 | Field            | Type         | Null | Key | Default | Extra          |
 +------------------+--------------+------+-----+---------+----------------+
@@ -163,8 +160,7 @@ DESCRIBE dataset;
 | data_type        | text         | YES  |     | NULL    |                |
 | collision_energy | int          | NO   |     | NULL    |                |
 +------------------+--------------+------+-----+---------+----------------+
-~~~
-{: .output}
+```
 
 ## INSERT record into table
 You can use the INSERT INTO command to add records to a table. This command has structure ``INSERT INTO <table_name> (<column_name>) Values (<column_value>)``.
@@ -186,7 +182,7 @@ The SELECT command allows you to retrieve records from a table. To retrieve all 
 ```sql
 SELECT * FROM dataset;
 ```
-~~~
+```text
 mysql> SELECT * FROM dataset;
 +----+-------------------+------------+-------------+----------------+-----------+------------------+
 | id | filename          | run_number | total_event | collision_type | data_type | collision_energy |
@@ -194,21 +190,19 @@ mysql> SELECT * FROM dataset;
 |  1 | expx.myfile1.root |        100 |        1112 | pp             | data      |            11275 |
 |  2 | expx.myfile2.root |         55 |         999 | pPb            | mc        |             1127 |
 +----+-------------------+------------+-------------+----------------+-----------+------------------+
-~~~
-{: .output}
+```
 You can select specific columns by listing them after the SELECT statement:
 ```sql
 SELECT filename FROM dataset;
 ```
-~~~
+```text
 +-------------------+
 | filename          |
 +-------------------+
 | expx.myfile1.root |
 | expx.myfile2.root |
 +-------------------+
-~~~
-{: .output}
+```
 2 rows in set (0.00 sec)
 
 ### Search with some condition
@@ -221,30 +215,28 @@ In addition you can use logical operators such as AND and OR to combine multiple
 SELECT filename FROM dataset WHERE run_number > 50 AND collision_type='pp';
 ```
 
-{: .source}
+:::::{admonition} SELECT on different condition
+:class: challenge
 
-> ## SELECT on different condition
->
-> Get the filename of condition total_event > 1000 and data_type is "data".
->
-> > ## Solution
-> >
-> > ```sql
-> >SELECT filename FROM dataset WHERE event_number > 1000 AND data_type='mc';
-> > ```
-> > {: .source}
-> >
-> > ~~~
->> +-------------------+
->>| filename          |
->> +-------------------+
->> | expx.myfile1.root |
->> +-------------------+
->> 1 row in set (0.00 sec)
-> > ~~~
-> > {: .output}
-> {: .solution}
-{: .challenge}
+Get the filename of condition total_event > 1000 and data_type is "data".
+
+::::{admonition} Solution
+:class: dropdown
+
+```sql
+SELECT filename FROM dataset WHERE event_number > 1000 AND data_type='mc';
+```
+
+```text
++-------------------+
+| filename          |
++-------------------+
+| expx.myfile1.root |
++-------------------+
+1 row in set (0.00 sec)
+```
+::::
+:::::
 
 ## UPDATE
 
@@ -258,30 +250,30 @@ SET collision_type = 'PbPb', collision_energy = 300
 WHERE filename = 'expx.myfile1.root';
 ```
 
-> ## Update on a condition
->
-> update the total_event of file "expx.myfile2.root" to 800.
->
-> > ## Solution
-> >
-> > ```sql
-> > UPDATE dataset
-> > SET total_event = 800
-> > WHERE filename = 'expx.myfile2.root';
-> > ```
-> > {: .source}
-> >
-> > ~~~
->> +-------------------+
->>| filename          |
->> +-------------------+
->> | expx.myfile1.root |
->> +-------------------+
->> 1 row in set (0.00 sec)
-> > ~~~
-> > {: .output}
-> {: .solution}
-{: .challenge}
+:::::{admonition} Update on a condition
+:class: challenge
+
+update the total_event of file "expx.myfile2.root" to 800.
+
+::::{admonition} Solution
+:class: dropdown
+
+```sql
+UPDATE dataset
+SET total_event = 800
+WHERE filename = 'expx.myfile2.root';
+```
+
+```text
++-------------------+
+| filename          |
++-------------------+
+| expx.myfile1.root |
++-------------------+
+1 row in set (0.00 sec)
+```
+::::
+:::::
 
 ## DELETE
 
@@ -293,14 +285,20 @@ DELETE FROM dataset
 WHERE filename = 'expx.myfile2.root';
 ```
 
->## Be careful with UPDATE and DELETE without WHERE!
->Very important: if you omit the `WHERE` clause in an `UPDATE` or `DELETE` statement, you will update or delete ALL records in the table!
->
-> For example, the following command
-> ```sql
-> DELETE FROM dataset;
-> ```
-> will delete all records in the `dataset` table.
->
->This can have unintended consequences, so be cautious when using these commands.
-{: .callout}
+:::{note} Be careful with UPDATE and DELETE without WHERE!
+Very important: if you omit the `WHERE` clause in an `UPDATE` or `DELETE` statement, you will update or delete ALL records in the table!
+
+For example, the following command
+```sql
+DELETE FROM dataset;
+```
+will delete all records in the `dataset` table.
+
+This can have unintended consequences, so be cautious when using these commands.
+:::
+
+:::{admonition} Key Points
+- SQL commands are the building blocks for interacting with a MySQL database.
+- Creating a database and tables is the first step in structuring your data.
+- Inserting, updating, and deleting records allows you to manage data effectively.
+:::

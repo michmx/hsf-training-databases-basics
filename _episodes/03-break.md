@@ -6,5 +6,4 @@ questions:
 - "Get up, stretch out, and dance!"
 objectives:
 - "Refresh your mind!"
-
-{% include links.md %}
+---

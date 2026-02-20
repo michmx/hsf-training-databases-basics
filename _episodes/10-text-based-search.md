@@ -2,19 +2,17 @@
 title: "Opensearch Text Based Queries"
 teaching: x
 exercises: 2
-questions:
-- "How to perform text based search in opensearch?"
-- "What are the ways to do text based search in opensearch?"
-
-objectives:
-- "Understand the fundamental query types in Opensearch for text-based searches."
-- "Learn how to construct and execute various text-based queries using Opensearch."
-
-keypoints:
-- "Opensearch supports a range of text-based query types, including match, match_phrase, wildcard, prefix, and fuzzy queries."
-- "Each query type has specific use cases and parameters that can be customized for tailored search results."
-- "Efficient utilization of text-based queries in Opensearch can significantly enhance data retrieval and analysis capabilities"
 ---
+
+:::{admonition} Questions
+- How to perform text based search in opensearch?
+- What are the ways to do text based search in opensearch?
+:::
+
+:::{admonition} Objectives
+- Understand the fundamental query types in Opensearch for text-based searches.
+- Learn how to construct and execute various text-based queries using Opensearch.
+:::
 
 # Text Based Queries
 Lets first understand why Opensearch has advantages on full text-based search compared to mySQL (SQL).
@@ -62,34 +60,28 @@ for hit in search_results["hits"]["hits"]:
     print(hit["_source"])
 ```
 
-{: .source}
+:::::{admonition} Search for documents with exact phrase "without cherenkov detector" .
+:class: challenge
 
-> ## Search for documents with exact phrase "without cherenkov detector" .
->
-> Retrieve documents with match phrase query.
->
-> > ## Solution
-> >
-> > ```python
-> > search_query = {
-> >     "query": {
-> >        "match_phrase": {
-> >             "description": "without cherenkov detector"
-> >         }
-> >     }
-> >}
-> > search_results = es.search(index=index_name, body=search_query)
-> > for hit in search_results["hits"]["hits"]:
-        print(hit["_source"]["filename"])
-> > ```
-> > {: .source}
-> >
-> > ~~~
-> > {'filename': 'expx.myfile3.root', 'run_number': 120, 'total_event': 200, 'collision_type': 'PbPb', 'data_type': 'data', 'collision_energy': 150, 'description': 'This file is produced without cherenkov detector'}
-> > ~~~
-> > {: .output}
-> {: .solution}
-{: .challenge}
+Retrieve documents with match phrase query.
+
+::::{admonition} Solution
+:class: dropdown
+
+```python
+search_query = {
+    "query": {"match_phrase": {"description": "without cherenkov detector"}}
+}
+search_results = es.search(index=index_name, body=search_query)
+for hit in search_results["hits"]["hits"]:
+    print(hit["_source"]["filename"])
+```
+
+```text
+{'filename': 'expx.myfile3.root', 'run_number': 120, 'total_event': 200, 'collision_type': 'PbPb', 'data_type': 'data', 'collision_energy': 150, 'description': 'This file is produced without cherenkov detector'}
+```
+::::
+:::::
 
 ## Match query
 The match query is a basic query type in opensearch used to search for documents containing specific words or phrases in a specified field, such as the description field.
@@ -137,35 +129,28 @@ search_results = es.search(index=index_name, body=search_query)
 for hit in search_results["hits"]["hits"]:
     print(hit["_source"])
 ```
-{: .source}
 
-> ## Search for documents with words "cherenkov" or  "trigger" .
->
-> Retrieve documents with match phrase query.
->
-> > ## Solution
-> >
-> > ```python
-> > search_query = {
-> >     "query": {
-> >        "match": {
-> >             "description": "cherenkov trigger"
-> >         }
-> >     }
-> >}
-> > search_results = es.search(index=index_name, body=search_query)
-> > for hit in search_results["hits"]["hits"]:
-        print(hit["_source"]["filename"])
-> > ```
-> > {: .source}
-> >
-> > ~~~
-> > {'filename': 'expx.myfile3.root', 'run_number': 120, 'total_event': 200, 'collision_type': 'PbPb', 'data_type': 'data', 'collision_energy': 150, 'description': 'This file is produced without cherenkov detector'}
-> > {'filename': 'expx.myfile1.root', 'run_number': 100, 'total_event': 1112, 'collision_type': 'pp', 'data_type': 'data', 'collision_energy': 250, 'description': 'This file is produced with L1 and L2 trigger.'}
-> > ~~~
-> > {: .output}
-> {: .solution}
-{: .challenge}
+:::::{admonition} Search for documents with words "cherenkov" or  "trigger" .
+:class: challenge
+
+Retrieve documents with match phrase query.
+
+::::{admonition} Solution
+:class: dropdown
+
+```python
+search_query = {"query": {"match": {"description": "cherenkov trigger"}}}
+search_results = es.search(index=index_name, body=search_query)
+for hit in search_results["hits"]["hits"]:
+    print(hit["_source"]["filename"])
+```
+
+```text
+{'filename': 'expx.myfile3.root', 'run_number': 120, 'total_event': 200, 'collision_type': 'PbPb', 'data_type': 'data', 'collision_energy': 150, 'description': 'This file is produced without cherenkov detector'}
+{'filename': 'expx.myfile1.root', 'run_number': 100, 'total_event': 1112, 'collision_type': 'pp', 'data_type': 'data', 'collision_energy': 250, 'description': 'This file is produced with L1 and L2 trigger.'}
+```
+::::
+:::::
 
 # query_string
 
@@ -207,3 +192,9 @@ for hit in search_results["hits"]["hits"]:
 ```
 
 This query will match documents with terms like "production," "producer," "products," etc., based on the fuzziness parameter specified.
+
+:::{admonition} Key Points
+- Opensearch supports a range of text-based query types, including match, match_phrase, wildcard, prefix, and fuzzy queries.
+- Each query type has specific use cases and parameters that can be customized for tailored search results.
+- Efficient utilization of text-based queries in Opensearch can significantly enhance data retrieval and analysis capabilities
+:::

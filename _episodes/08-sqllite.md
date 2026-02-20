@@ -2,16 +2,17 @@
 title: "SQLite"
 teaching: 60
 exercises: 30
-questions:
-- "What is SQLite?"
-- "How do I create an SQLite database?"
-objectives:
-- "Creating SQLite database"
-- "Manipulating the database"
-keypoints:
-- "For lightweight applications, use SQLite."
-- "Benefit from integration between sqlite3 and pandas."
 ---
+
+:::{admonition} Questions
+- What is SQLite?
+- How do I create an SQLite database?
+:::
+
+:::{admonition} Objectives
+- Creating SQLite database
+- Manipulating the database
+:::
 
 
 ## Introduction to SQLite
@@ -32,47 +33,50 @@ Create a working directory `hsf_sqlite_training`:
 mkdir hsf_sqlite_training
 cd hsf_sqlite_trainins
 ```
-{: .source}
 
 Let's create a database, that contains information from the Particle Data Group particle properties table.
 First, we need to download the [particle properties table](https://pdg.lbl.gov/2023/mcdata/mass_width_2023.txt) from 2023.
 You can do it manually and place it in your directory `hsf_sqlite_training` under the name `particle_table.txt` or if you use Python 3.7+ you can download the file automatically with a python module `requests`.
 
 
-> ## Additional: using `requests`
->
->To check the Python version on your machine do the following:
->
->```bash
->python3 --version
->```
->{: .source}
->
->If the python version is higher than 3.7, you can install `requests` with `python -m pip install requests`.
->Then you can create a script `download_particle_table.py` using your favorite code editor.
->
->```python
->import requests
->particle_table = "https://pdg.lbl.gov/2023/mcdata/mass_width_2023.txt" #url of the file we want
->response = requests.get(particle_table) #getting the response from the url.
->
->if response.status_code == 200:
->    with open("particle_table.txt", "wb") as file: #writing the response into the txt file `particle_table.txt` locally
->        file.write(response.content)
->        print("Particle table is downloaded!")
->else:
->    print("Failed to download the particle table.") #it can be that the server is down or you have a typo in the url
->```
->{: .source}
->
->Save the `download_particle_table.py` script and execute with `python3 download_particle_table.py`.
->You should see the downloaded file `particle_table.txt` in your working directory.
-{: .callout}
+:::{note} Additional: using `requests`
+To check the Python version on your machine do the following:
+
+```bash
+python3 --version
+```
+
+If the python version is higher than 3.7, you can install `requests` with `python -m pip install requests`.
+Then you can create a script `download_particle_table.py` using your favorite code editor.
+
+```python
+import requests
+
+particle_table = (
+    "https://pdg.lbl.gov/2023/mcdata/mass_width_2023.txt"  # url of the file we want
+)
+response = requests.get(particle_table)  # getting the response from the url.
+
+if response.status_code == 200:
+    with open(
+        "particle_table.txt", "wb"
+    ) as file:  # writing the response into the txt file `particle_table.txt` locally
+        file.write(response.content)
+        print("Particle table is downloaded!")
+else:
+    print(
+        "Failed to download the particle table."
+    )  # it can be that the server is down or you have a typo in the url
+```
+
+Save the `download_particle_table.py` script and execute with `python3 download_particle_table.py`.
+You should see the downloaded file `particle_table.txt` in your working directory.
+:::
 
 Open the `particle_table.txt` in your favorite text editor and study the data structure inside.
 You should see:
 
-```bash
+```text
 * MASSES, WIDTHS, AND MC ID NUMBERS FROM 2023 EDITION OF RPP
 *
 * The following values were generated on 31-May-2023 by the Berkeley Particle
@@ -118,7 +122,6 @@ You should see:
       25                          1.2525E+02        +1.7E-01 -1.7E-01  3.2E-03           +2.4E-03 -1.7E-03 H                   0
 ...
 ```
-{: .output}
 
 Now that we have obtained the particle table, let's build the SQlite database!
 
@@ -139,7 +142,6 @@ Here one can perform operations on the data base, such as inserting, updating, d
 
 connection.close()  # close database connection
 ```
-{: .source}
 
 The `Connection` object represents the database that, in this case, is stored in RAM using a special name `:memory:`.
 If you want to save database locally replace `:memory:` with `<name>.db`.
@@ -175,7 +177,6 @@ readout = pd.read_sql("SELECT * FROM particles", connection)  # read from databa
 print(readout)  # print the database
 connection.close()  # close database connection
 ```
-{: .source}
 
 In the execute we have create a table called `particles` that contains a particle id (integer), mass (float), upper and lower mass errors (float), width (float), upper and lower width errors (float), particle name (TEXT) and charge (INTEGER).
 Then, we fill in the information on gluon into our `particles` table.
@@ -184,11 +185,10 @@ To read the database, we use pandas `read_sql` function.
 Now execute `create_database.py` with `python3 create_database.py`.
 You should see:
 
-```bash
+```text
    id  mass  masserrlow  masserrup  width  widtherrlow  widtherr_up name charge
 0  21   0.0         0.0        0.0    0.0          0.0          0.0    g      0
 ```
-{: .output}
 
 However, we would like to write down the entire list of the PDG particles into our database, not just a gluon!
 For this, we will use `executemany`, instead of `execute`.
@@ -196,7 +196,7 @@ But before that, we need to prepare our input data in the `particle_table.txt`.
 First of all the first 38 lines are taken with the header information that we do not need in our database, so we will skip these rows when copying.
 Secondly, the sizes of columns are different in the `particle_table.txt`, but luckily the header specifies the exact sizes of the table columns:
 
-```bash
+```text
 * 3)    column
 *       1 -  8 \ Monte Carlo particle numbers as described in the "Review of
 *       9 - 16 | Particle Physics". Charge states appear, as appropriate,
@@ -221,7 +221,6 @@ Secondly, the sizes of columns are different in the `particle_table.txt`, but lu
 *                should not be taken as a standardized presentation of
 *                particle names.
 ```
-{: .output}
 
 You can check in your favorite text editor that the column definitions are correct.
 Now `particle_table.txt` contains more precise information than what we want to save in our database.
@@ -262,7 +261,6 @@ data[["name", "charge"]] = data["namecharge"].str.extract(r"(.+?)\s+(\S+)$")
 data = data.drop("namecharge", axis=1)
 data = data.values.tolist()
 ```
-{: .source}
 
 `executemany` expects an iterable input.
 Therefore we transform the pandas dataset to nested lists.
@@ -275,11 +273,10 @@ readout = pd.read_sql("SELECT * FROM particles", connection)  # read from databa
 print(readout)  # print the database
 connection.close()
 ```
-{: .source}
 
 Save the `create_database.py` and execute with `python3 create_database.py`, you should see the following output:
 
-```bash
+```text
        id       mass  masserrlow  masserrup         width   widtherrlow  \
 0      21    0.00000     0.00000    0.00000  0.000000e+00  0.000000e+00
 1      22    0.00000     0.00000    0.00000  0.000000e+00  0.000000e+00
@@ -308,7 +305,6 @@ Save the `create_database.py` and execute with `python3 create_database.py`, you
 
 [229 rows x 9 columns]
 ```
-{: .output}
 
 ### Creating sql database directly from pandas dataframe
 
@@ -353,7 +349,6 @@ readout = pd.read_sql("SELECT * FROM particles", connection)  # read from databa
 print(readout)  # print the database
 connection.close()
 ```
-{: .source}
 
 ## Manipulating the database with SQLite
 
@@ -361,31 +356,40 @@ Before learning how to manipulate the database, let's first save the database cr
 Replace the name of the database `:memory:` with `particles.db` and rerun `create_database.py`.
 You should see `particles.db` in your directory.
 
-> ## Exercise
->
-> Open the `particles.db` file and create a table that contains all neutral particles.
->
-{: .challenge}
+:::::{admonition} Exercise
+:class: challenge
 
-> ## Solution
->
->```python
->cursor.execute("CREATE TABLE neutral_particles AS SELECT * from particles WHERE charge = '0'")
->```
-> {: .source}
-{: .solution}
+Open the `particles.db` file and create a table that contains all neutral particles.
+
+::::{admonition} Solution
+:class: dropdown
+
+```python
+cursor.execute(
+    "CREATE TABLE neutral_particles AS SELECT * from particles WHERE charge = '0'"
+)
+```
+::::
+:::::
 
 
-> ## Exercise
->
->Open the `particles.db` file and select only neutral leptons.
->
-{: .challenge}
+:::::{admonition} Exercise
+:class: challenge
 
-> ## Solution
->
->```python
->readout = pd.read_sql("SELECT * FROM neutral_particles WHERE name LIKE 'nu%'", connection)
->```
-> {: .source}
-{: .solution}
+Open the `particles.db` file and select only neutral leptons.
+
+::::{admonition} Solution
+:class: dropdown
+
+```python
+readout = pd.read_sql(
+    "SELECT * FROM neutral_particles WHERE name LIKE 'nu%'", connection
+)
+```
+::::
+:::::
+
+:::{admonition} Key Points
+- For lightweight applications, use SQLite.
+- Benefit from integration between sqlite3 and pandas.
+:::

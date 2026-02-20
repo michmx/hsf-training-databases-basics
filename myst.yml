@@ -1,0 +1,34 @@
+version: 1
+
+project:
+  title: "Introduction to Databases for HEP"
+  description: "HSF Training lesson on databases with applications in HEP and Nuclear Physics"
+  github: https://github.com/hsf-training/hsf-training-databases-basics
+  license: CC-BY-4.0
+  toc:
+    - file: index.md
+    - file: setup.md
+    - title: Episodes
+      children:
+        - file: _episodes/01-introduction.md
+        - file: _episodes/02-sql-basics.md
+        - file: _episodes/03-break.md
+        - file: _episodes/04-mysql-and-python.md
+        - file: _episodes/05-mysql-queries.md
+        - file: _episodes/06-conditions-database.md
+        - file: _episodes/07-break.md
+        - file: _episodes/08-sqllite.md
+        - file: _episodes/09-opensearch-queires.md
+        - file: _episodes/10-text-based-search.md
+    - title: Reference
+      file: reference.md
+    - title: Extras
+      children:
+        - file: _extras/about.md
+        - file: _extras/discuss.md
+        - file: _extras/guide.md
+
+site:
+  title: "Introduction to Databases for HEP"
+  options:
+    logo: fig/hsf-logo.png

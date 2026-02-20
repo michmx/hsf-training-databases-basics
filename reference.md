@@ -1,5 +1,5 @@
 ---
-layout: reference
+title: Reference
 ---
 
 ## Glossary

@@ -2,17 +2,18 @@
 title: "SQLAlchemy and MySQL: Exercises"
 teaching: 5
 exercises: 6
-questions:
-- "How to perform CRUD operations using SQLAlchemy?"
-- "How to query and filter records in SQLAlchemy?"
-objectives:
-- "Practice inserting records into a MySQL database using SQLAlchemy."
-- "Perform queries and filtering on the dataset table."
-- "Update and delete records in the dataset table."
-keypoints:
-- "CRUD operations in SQLAlchemy: Create, Read, Update, Delete."
-- "Querying and filtering records based on specific conditions."
 ---
+
+:::{admonition} Questions
+- How to perform CRUD operations using SQLAlchemy?
+- How to query and filter records in SQLAlchemy?
+:::
+
+:::{admonition} Objectives
+- Practice inserting records into a MySQL database using SQLAlchemy.
+- Perform queries and filtering on the dataset table.
+- Update and delete records in the dataset table.
+:::
 
 ## Why python with SQL?
 
@@ -26,9 +27,9 @@ SQLAlchemy is a powerful library that provides a high-level interface for intera
 ## Lets create a new database for this chapter.
 So as not to collide with database created in previous chapter, let's create a different database for this one called `metadata2`
 In another terminal, run the following command
-~~~bash
+```bash
 docker exec -it metadata bash -c "mysql -uroot -pmypassword"
-~~~
+```
 Then you will see a mysql command prompt as ``mysql>`` . Use following command to create  a database named ``metadata2``.
 ```sql
 CREATE DATABASE metadata2;
@@ -70,7 +71,7 @@ Now, create a new python file, and use it for the subsequent commands.
 
 ## Setting Up the Database Connection:
 
-SQLAlchemy facilitates database connections in Python by using an Engine, which acts as the interface between the application and the database. The Engine manages database communication, executing SQL commands, and transaction handling. It requires a connection URL to specify the database type, credentials, and other connection details, which allows SQLAlchemy to translate its functions to whatever database configuration we want to interact with. Sessions, managed by sessionmaker, handle interactions between the application and the database, allowing for transactions, queries, and data manipulation in a structured manner.
+SQLAlchemy facilitates database connections in Python by using an Engine, which acts as the interface between the application and the database. The Engine manages database communication, executing SQL commands, and transaction handling. It requires a connection URL to specify the database type, credentials, and other connection details, which allows SQLAranslate its functions to whatever database configuration we want to interact with. Sessions, managed by sessionmaker, handle interactions between the application and the database, allowing for transactions, queries, and data manipulation in a structured manner.
 
 Let's import necessary things.
 ```python
@@ -182,28 +183,26 @@ for result in results:
     print(result.filename)
 ```
 
-{: .source}
+:::::{admonition} Search on different column
+:class: challenge
 
-> ## Search on different column
->
-> Retrieve and display all collision_type
->
-> > ## Solution
-> >
-> > ```python
-> >results = session.query(Dataset.collison_type).all()
-> >for result in results:
-        print(result.collison_type)
-> > ```
-> > {: .source}
-> >
-> > ~~~
-> > pp
-> > pPb
-> > ~~~
-> > {: .output}
-> {: .solution}
-{: .challenge}
+Retrieve and display all collision_type
+
+::::{admonition} Solution
+:class: dropdown
+
+```python
+results = session.query(Dataset.collison_type).all()
+for result in results:
+    print(result.collison_type)
+```
+
+```text
+pp
+pPb
+```
+::::
+:::::
 
 # Search the database with condition.
 In SQLAlchemy, the filter() method is used within a query() to add conditions or criteria to the query. It narrows down the selection by applying specific constraints based on the given criteria.
@@ -226,28 +225,30 @@ for result in results2:
     print(result.filename)
 ```
 
-{: .source}
+:::::{admonition} Search using OR statement
+:class: challenge
 
-> ## Search using OR statement
->
-> Retrieve and display filenames with "mc" data_type and collision_energy>1000
->
-> > ## Solution
-> >
-> > ```python
-> >results = session.query(Dataset.filename).filter((Dataset.data_type =="mc") | (Dataset.collision_energy>1000 )).all()
-> >for result in results:
-> >       print(result.collison_type)
-> > ```
-> > {: .source}
-> >
-> > ~~~
-> > expx.myfile1.root
-> > expx.myfile2.root
-> > ~~~
-> > {: .output}
-> {: .solution}
-{: .challenge}
+Retrieve and display filenames with "mc" data_type and collision_energy>1000
+
+::::{admonition} Solution
+:class: dropdown
+
+```python
+results = (
+    session.query(Dataset.filename)
+    .filter((Dataset.data_type == "mc") | (Dataset.collision_energy > 1000))
+    .all()
+)
+for result in results:
+    print(result.collison_type)
+```
+
+```text
+expx.myfile1.root
+expx.myfile2.root
+```
+::::
+:::::
 
 ## Update the database
 To update a record in a table, you begin by querying for the specific record or records you want to update using query(). The filter() method is used to specify the conditions for the selection. Once you have the record(s) to update, modify the attributes as needed. Finally, calling session.commit() saves the changes made to the database. This ensures that the modifications are persisted permanently.
@@ -262,29 +263,23 @@ if record_to_update:
     record_to_update.collision_energy = 300
     session.commit()
 ```
-{: .source}
 
-> ## Update
->
-> Update `run_number` to 1000 for record with data_type `mc`.
->
-> > ## Solution
-> >
-> > ```python
-> >record_to_update = (session.query(Dataset).filter(Dataset.data_type == "mc").first())
-> > if record_to_update:
-> >       record_to_update.run_number = 1000
-> >     session.commit()
-> > ```
-> > {: .source}
-> >
-> > ~~~
-> >
-> >
-> > ~~~
-> > {: .output}
-> {: .solution}
-{: .challenge}
+:::::{admonition} Update
+:class: challenge
+
+Update `run_number` to 1000 for record with data_type `mc`.
+
+::::{admonition} Solution
+:class: dropdown
+
+```python
+record_to_update = session.query(Dataset).filter(Dataset.data_type == "mc").first()
+if record_to_update:
+    record_to_update.run_number = 1000
+    session.commit()
+```
+::::
+:::::
 
 ## Delete the database
 Basically the same, we need to first get the record to update using query and filter. Then delete the record and commit to see the changes.
@@ -303,3 +298,8 @@ It's essential to close the session after you've finished working with it to rel
 ```python
 session.close()
 ```
+
+:::{admonition} Key Points
+- CRUD operations in SQLAlchemy: Create, Read, Update, Delete.
+- Querying and filtering records based on specific conditions.
+:::

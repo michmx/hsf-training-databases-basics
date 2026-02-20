@@ -2,22 +2,20 @@
 title: "Intro to NoSQL and Opensearch Queries"
 teaching: x
 exercises: 6
-questions:
-- "What is NoSQL database and Opensearch?"
-- "How to perform indexing in Opensearch?"
-- "How to query and filter records in opensearch?"
-objectives:
-- "Understand the basic structure of Opensearch queries."
-- "Learn how to create and manage indices in Opensearch."
-- "Practice using different types of queries such as term queries, range queries, and compound queries."
-- "Gain familiarity with updating and deleting documents in Opensearch."
-keypoints:
-- "Opensearch queries can be used to search, update, and delete documents in an Opensearch index."
-- "Indices in Opensearch define the structure and mapping of documents."
-- "Term queries match exact terms or values in a specific field."
-- "Range queries match documents within a specified range of values."
-- "Compound queries combine multiple conditions using boolean logic."
 ---
+
+:::{admonition} Questions
+- What is NoSQL database and Opensearch?
+- How to perform indexing in Opensearch?
+- How to query and filter records in opensearch?
+:::
+
+:::{admonition} Objectives
+- Understand the basic structure of Opensearch queries.
+- Learn how to create and manage indices in Opensearch.
+- Practice using different types of queries such as term queries, range queries, and compound queries.
+- Gain familiarity with updating and deleting documents in Opensearch.
+:::
 
 # NOSQL Databases
 NSQL databases diverge from the traditional table-based structure of RDMS and are designed to handle unstructured or
@@ -234,29 +232,27 @@ for hit in search_results["hits"]["hits"]:
     print(hit["_source"])
 ```
 
-{: .source}
+:::::{admonition} Search for filename for documents with data_type `mc`.
+:class: challenge
 
-> ## Search for filename for documents with data_type `mc`.
->
-> Retrieve and display filename
->
-> > ## Solution
-> >
-> > ```python
-> > search_query = {"query": {"term": {"data_type": "mc"}}}
-> > search_results = es.search(index=index_name, body=search_query)
-> > for hit in search_results["hits"]["hits"]:
-        print(hit["_source"]["filename"])
-> > ```
-> > {: .source}
-> >
-> > ~~~
-> > expx.myfile2.root
-> > expx.myfile4.root
-> > ~~~
-> > {: .output}
-> {: .solution}
-{: .challenge}
+Retrieve and display filename
+
+::::{admonition} Solution
+:class: dropdown
+
+```python
+search_query = {"query": {"term": {"data_type": "mc"}}}
+search_results = es.search(index=index_name, body=search_query)
+for hit in search_results["hits"]["hits"]:
+    print(hit["_source"]["filename"])
+```
+
+```text
+expx.myfile2.root
+expx.myfile4.root
+```
+::::
+:::::
 
 #### Range Query
 It is also a term level query where we can apply a range of values to a field/metadata.
@@ -284,37 +280,26 @@ for hit in search_results["hits"]["hits"]:
     print(hit["_source"])
 ```
 
-{: .source}
+:::::{admonition} Search for filename for all the documents whose collision energy ranging from  100 to 200 (both exclusive) .
+:class: challenge
 
-> ## Search for filename for all the documents whose collision energy ranging from  100 to 200 (both exclusive) .
->
-> Retrieve and display filename with range query
->
-> > ## Solution
-> >
-> > ```python
-> > search_query = {
-> >    "query": {
-> >        "range": {
-> >             "collision_energy": {
-> >                 "gt": 100,
-> >                 "lt": 200
-> >             }
-> >         }
-> >     }
-> > }
-> > search_results = es.search(index=index_name, body=search_query)
-> > for hit in search_results["hits"]["hits"]:
-> >        print(hit["_source"]["filename"])
-> > ```
-> > {: .source}
-> >
-> > ~~~
-> > expx.myfile3.root
-> > ~~~
-> > {: .output}
-> {: .solution}
-{: .challenge}
+Retrieve and display filename with range query
+
+::::{admonition} Solution
+:class: dropdown
+
+```python
+search_query = {"query": {"range": {"collision_energy": {"gt": 100, "lt": 200}}}}
+search_results = es.search(index=index_name, body=search_query)
+for hit in search_results["hits"]["hits"]:
+    print(hit["_source"]["filename"])
+```
+
+```text
+expx.myfile3.root
+```
+::::
+:::::
 
 #### Prefix Query
 Another term level query is prefix query. As the name suggest it search for terms with sopecific prefix.
@@ -360,37 +345,35 @@ for hit in search_results["hits"]["hits"]:
     print(hit["_source"])
 ```
 
-{: .source}
+:::::{admonition} Search for filename for documents with data_type `data` and collision_energy `150` .
+:class: challenge
 
-> ## Search for filename for documents with data_type `data` and collision_energy `150` .
->
-> Retrieve and display filename
->
-> > ## Solution
-> >
-> > ```python
-> > search_query = {
-> >    "query": {
-> >        "bool": {
-> >            "must": [
-> >                { "term": {"data_type": "data"} },
-> >                { "term": { "collision_energy": 150 } }
-> >            ]
-> >        }
-> >    }
-> > }
-> > search_results = es.search(index=index_name, body=search_query)
-> > for hit in search_results["hits"]["hits"]:
-> >        print(hit["_source"]["filename"])
-> > ```
-> > {: .source}
-> >
-> > ~~~
-> > expx.myfile3.root
-> > ~~~
-> > {: .output}
-> {: .solution}
-{: .challenge}
+Retrieve and display filename
+
+::::{admonition} Solution
+:class: dropdown
+
+```python
+search_query = {
+    "query": {
+        "bool": {
+            "must": [
+                {"term": {"data_type": "data"}},
+                {"term": {"collision_energy": 150}},
+            ]
+        }
+    }
+}
+search_results = es.search(index=index_name, body=search_query)
+for hit in search_results["hits"]["hits"]:
+    print(hit["_source"]["filename"])
+```
+
+```text
+expx.myfile3.root
+```
+::::
+:::::
 
 #### Should Query
 The should query searches for documents that match any of the specified conditions. This is equivalent to OR operator.
@@ -412,38 +395,36 @@ for hit in search_results["hits"]["hits"]:
     print(hit["_source"])
 ```
 
-{: .source}
+:::::{admonition} Search for filename for documents with run_number `55` or  collision_energy `150` .
+:class: challenge
 
-> ## Search for filename for documents with run_number `55` or  collision_energy `150` .
->
-> Retrieve and display filename
->
-> > ## Solution
-> >
-> > ```python
-> > search_query = {
-> >    "query": {
-> >        "bool": {
-> >            "should": [
-> >                { "term": {"run_number": 55} },
-> >                { "term": { "collision_energy": 150 } }
-> >            ]
-> >        }
-> >    }
-> > }
-> > search_results = es.search(index=index_name, body=search_query)
-> > for hit in search_results["hits"]["hits"]:
-        print(hit["_source"]["filename"])
-> > ```
-> > {: .source}
-> >
-> > ~~~
-> > expx.myfile2.root
-> > expx.myfile3.root
-> > ~~~
-> > {: .output}
-> {: .solution}
-{: .challenge}
+Retrieve and display filename
+
+::::{admonition} Solution
+:class: dropdown
+
+```python
+search_query = {
+    "query": {
+        "bool": {
+            "should": [
+                {"term": {"run_number": 55}},
+                {"term": {"collision_energy": 150}},
+            ]
+        }
+    }
+}
+search_results = es.search(index=index_name, body=search_query)
+for hit in search_results["hits"]["hits"]:
+    print(hit["_source"]["filename"])
+```
+
+```text
+expx.myfile2.root
+expx.myfile3.root
+```
+::::
+:::::
 
 #### Must Not Query
 The must_not query excludes documents that match the specified condition. This is equivalent to NOT operator.
@@ -455,78 +436,62 @@ for hit in search_results["hits"]["hits"]:
     print(hit["_source"])
 ```
 
-{: .source}
+:::::{admonition} Search for filename for all the documents that is not run_number `55` .
+:class: challenge
 
-> ## Search for filename for all the documents that is not run_number `55` .
->
-> Retrieve and display filename
->
-> > ## Solution
-> >
-> > ```python
-> > search_query = {
-> >    "query": {
-> >        "bool": {
-> >            "must_not": [
-> >                { "term": {"run_number": 55} }
-> >            ]
-> >        }
-> >    }
-> > }
-> > search_results = es.search(index=index_name, body=search_query)
-> > for hit in search_results["hits"]["hits"]:
-        print(hit["_source"]["filename"])
-> > ```
-> > {: .source}
-> >
-> > ~~~
-> > expx.myfile1.root
-> > expx.myfile3.root
-> > expx.myfile4.root
-> > ~~~
-> > {: .output}
-> {: .solution}
-{: .challenge}
+Retrieve and display filename
 
-{: .source}
+::::{admonition} Solution
+:class: dropdown
 
-> ## Search for filename for all the documents that must total_event greater than 200 and run_number greater than 50, should have collision_type as PbPb and must NOT have collision_energy 150. .
->
-> Retrieve and display filename combing must, should and mustn't queries.
->
-> > ## Solution
-> >
-> > ```python
-> > search_query = {
-> >    "query": {
-> >        "bool": {
-> >            "must": [
-> >                { "range": { "total_event": { "gt": 200 } } },
-> >                { "range": { "run_number": { "gt": 50 } } }
-> >            ],
-> >            "should": {
-> >                "term": { "collision_type": "PbPb" }
-> >            },
-> >            "must_not": {
-> >                "term": { "collsiion_energy": 150 }
-> >            }
-> >        }
-> >    }
-> > }
-> > search_results = es.search(index=index_name, body=search_query)
-> > for hit in search_results["hits"]["hits"]:
-> >     print(hit["_source"]["filename"])
-> > ```
-> > {: .source}
-> >
-> > ~~~
-> > expx.myfile1.root
-> > expx.myfile2.root
-> > expx.myfile4.root
-> > ~~~
-> > {: .output}
-> {: .solution}
-{: .challenge}
+```python
+search_query = {"query": {"bool": {"must_not": [{"term": {"run_number": 55}}]}}}
+search_results = es.search(index=index_name, body=search_query)
+for hit in search_results["hits"]["hits"]:
+    print(hit["_source"]["filename"])
+```
+
+```text
+expx.myfile1.root
+expx.myfile3.root
+expx.myfile4.root
+```
+::::
+:::::
+
+:::::{admonition} Search for filename for all the documents that must total_event greater than 200 and run_number greater than 50, should have collision_type as PbPb and must NOT have collision_energy 150. .
+:class: challenge
+
+Retrieve and display filename combing must, should and mustn't queries.
+
+::::{admonition} Solution
+:class: dropdown
+
+```python
+search_query = {
+    "query": {
+        "bool": {
+            "must": [
+                {"range": {"total_event": {"gt": 200}}},
+                {"range": {"run_number": {"gt": 50}}},
+            ],
+            "should": {"term": {"collision_type": "PbPb"}},
+            "must_not": {"term": {"collsiion_energy": 150}},
+        }
+    }
+}
+search_results = es.search(index=index_name, body=search_query)
+for hit in search_results["hits"]["hits"]:
+    print(hit["_source"]["filename"])
+```
+
+```text
+expx.myfile1.root
+expx.myfile2.root
+expx.myfile4.root
+```
+::::
+:::::
 
 
 # Update a document by filename
@@ -544,3 +509,11 @@ Lets delete a document by its document ID (which is filename in our case)
 _id = "expx.myfile1.root"
 es.delete(index=index_name, id=_id)
 ```
+
+:::{admonition} Key Points
+- Opensearch queries can be used to search, update, and delete documents in an Opensearch index.
+- Indices in Opensearch define the structure and mapping of documents.
+- Term queries match exact terms or values in a specific field.
+- Range queries match documents within a specified range of values.
+- Compound queries combine multiple conditions using boolean logic.
+:::

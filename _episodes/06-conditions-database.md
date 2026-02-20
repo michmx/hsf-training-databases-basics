@@ -2,18 +2,19 @@
 title: "Introduction to Conditions Databases in HEP"
 teaching: 1.5 hours
 exercises: 2
-questions:
-- "What are the key objects in a Conditions Database and how are they related?"
-- "How can you use SQLAlchemy to model and query a simple Conditions Database?"
-objectives:
-- "Understand the role of Conditions Databases in high-energy physics."
-- "Learn the key concepts: Global Tags, PayloadTypes, Payloads, and IOVs."
-- "Model relationships between these objects using SQLAlchemy."
-- "Perform basic queries to retrieve conditions data efficiently."
-keypoints:
-- "Conditions Databases store metadata for time-dependent data like alignment and calibration."
-- "Global Tags group related PayloadTypes, which contain Payloads valid for specific IOVs."
 ---
+
+:::{admonition} Questions
+- What are the key objects in a Conditions Database and how are they related?
+- How can you use SQLAlchemy to model and query a simple Conditions Database?
+:::
+
+:::{admonition} Objectives
+- Understand the role of Conditions Databases in high-energy physics.
+- Learn the key concepts: Global Tags, PayloadTypes, Payloads, and IOVs.
+- Model relationships between these objects using SQLAlchemy.
+- Perform basic queries to retrieve conditions data efficiently.
+:::
 
 # Lesson: Introduction to Conditions Databases in HEP
 
@@ -49,12 +50,12 @@ A **Global Tag** is a label that identifies a consistent set of conditions data.
 - Each **Payload** represents a specific piece of conditions data and is valid for the **Interval of Validity (IOV)** associated with it. This ensures that the correct payload is applied for a given run or timestamp.
 - During data processing, the CDB retrieves the appropriate payload by matching the **IOV** to the required run or timestamp, ensuring consistency and accuracy.
 
-<figure>
-    <img src="../fig/cdb_diagram.png" alt="CDB schema diagram" width="250">
-    <figcaption>CDB schema diagram</figcaption>
-</figure>
-<br><br>
+:::{figure} ../fig/cdb_diagram.png
+:alt: CDB schema diagram
+:width: 250px
 
+CDB schema diagram
+:::
 
 For simplification, in the following example, we work with three objects:
 
@@ -258,3 +259,8 @@ for global_tag_name, payload_type_name, payload_url, max_iov in query:
 
     GlobalTag: Conditions, PayloadType: Calibrations, PayloadIOV URL: http://example.com/calib_v2.root, IOV: 2
     GlobalTag: Conditions, PayloadType: Alignment, PayloadIOV URL: http://example.com/align_v1.root, IOV: 1
+
+:::{admonition} Key Points
+- Conditions Databases store metadata for time-dependent data like alignment and calibration.
+- Global Tags group related PayloadTypes, which contain Payloads valid for specific IOVs.
+:::
